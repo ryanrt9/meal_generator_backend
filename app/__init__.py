@@ -19,7 +19,7 @@ def create_app(test_config=None):
     
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI= 'postgresql+psycopg2://postgres:postgres@localhost:5432/meal_generator_development'
+    app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql+psycopg2://postgres:postgres@localhost:5432/meal_generator_development'
 
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
