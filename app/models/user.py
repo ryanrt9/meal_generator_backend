@@ -5,6 +5,7 @@ class User(db.Model):
     email = db.Column(db.String)
     password = db.Column(db.String)
     recipes = db.relationship("Recipe", backref="user", lazy=True)
+    # confirm that recipes in this user model is going to hold everything that is in the Recipe model
     
     # def to_dict(self):
     #         return {
