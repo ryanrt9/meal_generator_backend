@@ -29,7 +29,8 @@ def create_user():
     db.session.add(new_user)
     db.session.commit()
     
-    return make_response({"user":new_user.to_dict()}, 201)
+    return make_response({"user_created":new_user.to_dict()}, 201)
+
 
 # get is to log in
 @user_bp.route("/<user_id>", methods=["GET"])
