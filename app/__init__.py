@@ -19,8 +19,8 @@ def create_app(test_config=None):
     
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql+psycopg2://postgres:postgres@localhost:5432/meal_generator_development'
-
+    # app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql+psycopg2://postgres:postgres@localhost:5432/meal_generator_development'
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI")
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
     from app.models.user import User
@@ -41,7 +41,7 @@ def create_app(test_config=None):
     from .routes.recipe_routes import recipe_bp
     app.register_blueprint(recipe_bp)
 
+# changed from .routes.recipes_routes import user_bp 
     from .routes.user_routes import user_bp
     app.register_blueprint(user_bp)
-
     return app
