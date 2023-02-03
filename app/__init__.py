@@ -41,7 +41,7 @@ def create_app(test_config=None):
     from .routes.recipe_routes import recipe_bp
     app.register_blueprint(recipe_bp)
 
-    from .routes.recipe_routes import user_bp
+    from .routes.user_routes import user_bp
     app.register_blueprint(user_bp)
 
     return app
