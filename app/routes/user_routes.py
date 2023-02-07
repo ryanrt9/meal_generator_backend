@@ -4,6 +4,7 @@ from app import db
 from app.models.recipe import Recipe
 from app.models.user import User
 import os
+import uuid
 
 user_bp= Blueprint('user', __name__, url_prefix='/user')
 
@@ -18,6 +19,11 @@ def validate_model(cls, model_id):
         abort(make_response({"message": f"There is no existing {cls.__name__} {model_id}"}, 404))
     
     return model
+
+# this is to generate a session token
+# The reason we need this is to maintain the user logged in and they can track the requests they are making
+def generate_session_token():
+    return str(uuid.uuid4())
 
 # post request to create a user
 @user_bp.route("/signup", methods=["POST"])
@@ -43,14 +49,38 @@ def create_user():
     
     return make_response({"user_created":new_user.to_dict()}, 201)
 
-# get is to log in
-@user_bp.route("/<user_id>", methods=["GET"])
-def get_one_user(user_id):
-    # user = validate_user(user_id)
-    user = validate_model(User, user_id)
+# Post to login and we will also need to store the session token in the front end with local storage
+@user_bp.route("/login", methods=["POST"])
+def login_user():
+
+    email = request.json.get("email")
+    password = request.json.get("password")
+
+    users = User.query.all()
+
+    all_users = [user.to_dict() for user in users]
+
+    user_email= next((u for u in all_users if u['email'] == email), None)
+    user_password = next((u for u in all_users if u['password'] == password), None)
+
+    # strech goal would be to encrypt the password in the backend with werkzueg security
+    if not user_email or not user_password:
+        return jsonify({'error': 'email or password is incorrect'}), 400
+
+
+    token = generate_session_token()
+
+    return jsonify({"token":token})
+
+# Get all users 
+@user_bp.route("/all_users", methods=["GET"])
+def get_all_users():
+    users= User.query.all()
+
+    users_response = [user.to_dict() for user in users]
     
-    return {"user": user.to_dict()}
-    # return make_response({"message": f"User {user_id} successfully deleted"}, 200)
+    return (jsonify(users_response))
+
 
 # user can delete profile
 @user_bp.route("/<user_id>", methods=["DELETE"])
