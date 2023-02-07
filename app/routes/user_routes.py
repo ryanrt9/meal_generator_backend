@@ -49,19 +49,6 @@ def create_user():
     
     return make_response({"user_created":new_user.to_dict()}, 201)
 
-# @user_bp.route("/<user_id>", methods=["GET"])
-@user_bp.route("/all_users", methods=["GET"])
-def get_all_users():
-    # user = validate_user(user_id)
-    # validate email instead of id 
-    users= User.query.all()
-
-    users_response = [user.to_dict() for user in users]
-    
-    return (jsonify(users_response))
-    # return make_response({"message": f"User {user_id} successfully deleted"}, 200)
-
-
 # Post to login and we will also need to store the session token in the front end with local storage
 @user_bp.route("/login", methods=["POST"])
 def login_user():
@@ -85,6 +72,14 @@ def login_user():
 
     return jsonify({"token":token})
 
+# Get all users 
+@user_bp.route("/all_users", methods=["GET"])
+def get_all_users():
+    users= User.query.all()
+
+    users_response = [user.to_dict() for user in users]
+    
+    return (jsonify(users_response))
 
 
 # user can delete profile
