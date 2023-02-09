@@ -46,8 +46,11 @@ def create_user():
 
     db.session.add(new_user)
     db.session.commit()
+
+    token = generate_session_token()
     
-    return make_response({"user_created":new_user.to_dict()}, 201)
+    # return make_response({"user_created":new_user.to_dict()}, 201)
+    return jsonify({"token":token})
 
 # Post to login and we will also need to store the session token in the front end with local storage
 @user_bp.route("/login", methods=["POST"])
