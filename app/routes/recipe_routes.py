@@ -42,6 +42,7 @@ def get_recipes_by_ingredients():
 
         recipe["recipe_url"] = recipe_url["sourceUrl"]
         recipe["time"] = recipe_url["readyInMinutes"]
+        recipe["servings"] = recipe_url["servings"]
 
 
     return make_response(jsonify(all_recipes))
@@ -64,7 +65,8 @@ def get_random_recipes():
             "recipe_id" : response["recipes"][i]["id"],
             "image" : response["recipes"][i]["image"],
             "recipe_url" : response["recipes"][i]["sourceUrl"],
-            "time" : response["recipes"][i]["readyInMinutes"]
+            "time" : response["recipes"][i]["readyInMinutes"],
+            "servings" : response["recipes"][i]["servings"]
         }
 
         random_recipes.append(random_recipe)
