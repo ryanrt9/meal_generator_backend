@@ -19,7 +19,6 @@ class Recipe(db.Model):
         recipe_dict["recipe_url"] = self.recipe_url     
         recipe_dict["time"] = self.time
         recipe_dict["user_id"] = self.user_id
-        recipe_dict["servings"] = self.servings
         return recipe_dict
 
     @classmethod
