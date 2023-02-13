@@ -6,8 +6,6 @@ class Recipe(db.Model):
     image = db.Column(db.String)
     recipe_url = db.Column(db.String)
     time= db.Column(db.Integer)
-    # Should we remove nullable = True because the only time we'll be using these models is for users that 
-    # are signed in to save recipes
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     user = db.relationship("User", back_populates="recipes")
 

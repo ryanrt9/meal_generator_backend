@@ -20,12 +20,10 @@ def validate_model(cls, model_id):
     
     return model
 
-# this is to generate a session token
-# The reason we need this is to maintain the user logged in and they can track the requests they are making
 def generate_session_token():
     return str(uuid.uuid4())
 
-# post request to create a user
+
 @user_bp.route("/signup", methods=["POST"])
 def create_user():
     request_body = request.get_json()
@@ -49,10 +47,8 @@ def create_user():
 
     token = generate_session_token()
     
-    # return make_response({"user_created":new_user.to_dict()}, 201)
     return jsonify({"token":token})
 
-# Post to login and we will also need to store the session token in the front end with local storage
 @user_bp.route("/login", methods=["POST"])
 def login_user():
 
@@ -66,7 +62,6 @@ def login_user():
     user_email= next((u for u in all_users if u['email'] == email), None)
     user_password = next((u for u in all_users if u['password'] == password), None)
 
-    # strech goal would be to encrypt the password in the backend with werkzueg security
     if not user_email or not user_password:
         return jsonify({'error': 'email or password is incorrect'}), 400
 
@@ -75,7 +70,6 @@ def login_user():
 
     return jsonify({"token":token})
 
-# Get all users 
 @user_bp.route("/all_users", methods=["GET"])
 def get_all_users():
     users= User.query.all()
@@ -85,7 +79,6 @@ def get_all_users():
     return (jsonify(users_response))
 
 
-# user can delete profile
 @user_bp.route("/<user_id>", methods=["DELETE"])
 def delete_one_board(user_id):
     user = User.query.get(user_id)
@@ -98,8 +91,6 @@ def delete_one_board(user_id):
 
 # ---------------------Nested Routes ------------------------------ 
 
-# "user/recipes"
-# get all recipes by user id -> this is what will be rendered to the saved recipes page
 @user_bp.route("/<user_id>/recipes", methods=["GET"])
 
 def get_all_recipes_by_user_id(user_id):
@@ -111,7 +102,6 @@ def get_all_recipes_by_user_id(user_id):
     return make_response(jsonify(return_body), 200)
 
 
-# add a new recipe to user id -> post request made to our backend model
 @user_bp.route("/<user_id>/add_recipe", methods=["POST"])
 def add_recipe_to_user(user_id):   
     user = validate_model(User, user_id)
@@ -119,7 +109,6 @@ def add_recipe_to_user(user_id):
     request_body = request.get_json()
     try:
         add_recipe= Recipe.from_dict(request_body) 
-        # the request body info is coming from the component 
         
     except KeyError:
         return {"details": "Missing Data"}, 400
@@ -127,6 +116,4 @@ def add_recipe_to_user(user_id):
     db.session.add(add_recipe)
     db.session.commit()
 
-    # return add_recipe.to_dict(), 201
-    # return make_response(jsonify({f'Recipe: {add_recipe.title} has been successfully deleted!'}), 200)
     return add_recipe.to_dict(), 201
